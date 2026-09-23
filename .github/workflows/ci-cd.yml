@@ -1,0 +1,31 @@
+name: Docker CI/CD
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+
+  build:
+    name: Build Docker Image
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: Checkout source code
+        uses: actions/checkout@v4
+
+      - name: Build Docker image
+        run: docker build -t github-docker-webapp:${{ github.sha }} .
+
+      - name: Test Docker image
+        run: |
+          docker run -d -p 8080:80 --name test-container github-docker-webapp:${{ github.sha }}
+          sleep 5
+          curl http://localhost:8080
+          docker stop test-container
+          docker rm test-container
