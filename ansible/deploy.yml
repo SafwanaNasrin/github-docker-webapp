@@ -1,0 +1,26 @@
+---
+- name: Deploy Docker Web Application
+  hosts: local
+  
+
+  tasks:
+
+    - name: Pull latest Docker image
+      community.docker.docker_image:
+        name: safwananasrin/github-docker-webapp
+        tag: jenkins
+        source: pull
+
+    - name: Stop existing production container
+      community.docker.docker_container:
+        name: ansible-webapp
+        state: absent
+
+    - name: Start Docker container
+      community.docker.docker_container:
+        name: ansible-webapp
+        image: safwananasrin/github-docker-webapp:jenkins
+        state: started
+        restart_policy: unless-stopped
+        ports:
+          - "8085:80"

@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: github-docker-webapp
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: github-docker-webapp
+  template:
+    metadata:
+      labels:
+        app: github-docker-webapp
+    spec:
+      containers:
+        - name: webapp
+          image: safwananasrin/github-docker-webapp:jenkins
+          ports:
+            - containerPort: 80
